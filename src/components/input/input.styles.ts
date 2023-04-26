@@ -39,3 +39,11 @@ export const InputWrap = styled(Between)`
     padding-left: 0.5rem;
   }
 `;
+
+export const SwitchInInput = styled.span`
+  button {
+    border: none;
+    width: 1.3em;
+    height: 1.3em;
+  }
+`;

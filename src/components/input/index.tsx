@@ -31,7 +31,7 @@ const Input = (props: InputProps) => {
   };
 
   return (
-    <InputWrap id={props.id} onClick={onClick}>
+    <InputWrap className={props.className} id={props.id} onClick={onClick}>
       {props.prefix ? <span className="prefix">{props.prefix}</span> : null}
       {props.label ? <span className="label">{props.label}</span> : null}
       <input

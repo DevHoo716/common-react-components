@@ -11,3 +11,11 @@ export const Between = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+
+export const FlatBtn = styled.button`
+  border: none;
+  background: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+`;
