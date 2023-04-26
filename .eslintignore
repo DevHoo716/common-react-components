@@ -3,3 +3,4 @@ dist
 
 # webpack
 webpack.config.js
+babel-plugin-macros.config.js
