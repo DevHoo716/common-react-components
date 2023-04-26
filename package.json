@@ -1,0 +1,54 @@
+{
+  "name": "common-react-components",
+  "version": "1.0.0",
+  "description": "React components, reusable in front-end development.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevHoo716/common-react-components.git"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "amoslover",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/DevHoo716/common-react-components/issues"
+  },
+  "homepage": "https://github.com/DevHoo716/common-react-components#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.4",
+    "@storybook/addon-essentials": "7.0.7",
+    "@storybook/addon-interactions": "7.0.7",
+    "@storybook/addon-links": "7.0.7",
+    "@storybook/blocks": "7.0.7",
+    "@storybook/react": "7.0.7",
+    "@storybook/react-webpack5": "7.0.7",
+    "@storybook/testing-library": "0.0.14-next.2",
+    "@types/react": "^18.0.38",
+    "@types/react-dom": "^18.0.11",
+    "css-loader": "^6.7.3",
+    "prop-types": "15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "7.0.7",
+    "style-loader": "^3.3.2",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.80.0",
+    "webpack-cli": "^5.0.2"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0"
+  }
+}
