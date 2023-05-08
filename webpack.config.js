@@ -5,7 +5,7 @@ module.exports = {
   entry: "./src/index.ts",
   devtool: "inline-source-map",
   output: {
-    filename: "bundle.js",
+    filename: "main.bundle.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
   },
@@ -35,5 +35,11 @@ module.exports = {
       src: path.resolve(__dirname, "src/"),
     },
     extensions: [".ts", ".tsx", ".js", ".json"],
+    fallback: {
+      fs: false,
+      os: require.resolve("os-browserify/browser"),
+      module: false,
+      path: require.resolve("path-browserify"),
+    },
   },
 };
