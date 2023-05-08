@@ -1,8 +1,8 @@
 {
-  "name": "common-react-components",
-  "version": "1.0.0",
+  "name": "amber-material",
+  "version": "0.0.1",
   "description": "React components, reusable in front-end development.",
-  "main": "index.js",
+  "main": "dist/main.bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch",
@@ -15,7 +15,8 @@
     "url": "git+https://github.com/DevHoo716/common-react-components.git"
   },
   "keywords": [
-    "react"
+    "react",
+    "components"
   ],
   "author": "amoslover",
   "license": "GPL-3.0-or-later",
@@ -47,6 +48,8 @@
     "css-loader": "^6.7.3",
     "eslint": "^8.39.0",
     "eslint-plugin-react": "^7.32.2",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "prop-types": "15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
