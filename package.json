@@ -1,14 +1,25 @@
 {
   "name": "amber-material",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "description": "React components, reusable in front-end development.",
-  "main": "dist/main.bundle.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/amber-material.umd.cjs",
+  "module": "./dist/amber-material.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/amber-material.js",
+      "require": "./dist/amber-material.umd.cjs"
+    }
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --watch",
-    "build": "webpack",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -24,46 +35,32 @@
     "url": "https://github.com/DevHoo716/common-react-components/issues"
   },
   "homepage": "https://github.com/DevHoo716/common-react-components#readme",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.10"
+  },
   "devDependencies": {
-    "@babel/preset-env": "^7.21.4",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.21.4",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@storybook/addon-essentials": "7.0.7",
-    "@storybook/addon-interactions": "7.0.7",
-    "@storybook/addon-links": "7.0.7",
-    "@storybook/blocks": "7.0.7",
-    "@storybook/react": "7.0.7",
-    "@storybook/react-webpack5": "7.0.7",
-    "@storybook/testing-library": "0.0.14-next.2",
-    "@types/react": "^18.0.38",
+    "@types/node": "^20.1.1",
+    "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/styled-components": "^5.1.26",
-    "@typescript-eslint/eslint-plugin": "^5.59.1",
-    "@typescript-eslint/parser": "^5.59.1",
-    "babel-plugin-macros": "^3.1.0",
-    "css-loader": "^6.7.3",
-    "eslint": "^8.39.0",
-    "eslint-plugin-react": "^7.32.2",
-    "os-browserify": "^0.3.0",
-    "path-browserify": "^1.0.1",
-    "prop-types": "15.8.1",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "7.0.7",
-    "style-loader": "^3.3.2",
     "styled-components": "^5.3.10",
-    "ts-loader": "^9.4.2",
-    "typescript": "^5.0.4",
-    "webpack": "^5.80.0",
-    "webpack-cli": "^5.0.2"
-  },
-  "peerDependencies": {
-    "react": ">=18.2.0",
-    "react-dom": ">=18.2.0",
-    "styled-components": ">=5.3.10"
+    "typescript": "^5.0.2",
+    "unocss": "^0.51.12",
+    "vite": "^4.3.2",
+    "vite-plugin-dts": "^2.3.0"
   }
 }
