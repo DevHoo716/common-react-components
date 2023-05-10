@@ -7,10 +7,11 @@ export const InputWrap = styled(Between)`
   padding: 0 1em;
   border: 1px solid #d6d8dc;
   cursor: text;
+  line-height: 1em;
+  align-items: baseline;
   input {
     flex: 1;
     height: 100%;
-    line-height: 1em;
     font-size: 1em;
     background: none;
     border: none;
@@ -20,7 +21,6 @@ export const InputWrap = styled(Between)`
     }
   }
   span.label {
-    line-height: 1em;
     font-size: 1em;
     font-weight: 700;
     color: #4a4a4a;
@@ -37,6 +37,12 @@ export const InputWrap = styled(Between)`
   }
   span.suffix {
     padding-left: 0.5rem;
+  }
+`;
+
+export const NumberInputWrap = styled(InputWrap)`
+  input::-webkit-inner-spin-button {
+    display: none;
   }
 `;
 
