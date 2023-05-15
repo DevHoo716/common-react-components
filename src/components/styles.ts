@@ -12,6 +12,12 @@ export const Between = styled.div`
   justify-content: space-between;
 `;
 
+export const BaselineBetween = styled.div`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+`;
+
 export const FlatBtn = styled.button`
   border: none;
   background: none;

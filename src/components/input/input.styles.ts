@@ -33,10 +33,10 @@ export const InputWrap = styled(Between)`
     }
   }
   span.prefix {
-    padding-right: 0.5rem;
+    padding-right: 0.5em;
   }
   span.suffix {
-    padding-left: 0.5rem;
+    padding-left: 0.5em;
   }
 `;
 
@@ -51,5 +51,32 @@ export const SwitchInInput = styled.span`
     border: none;
     width: 1.3em;
     height: 1.3em;
+  }
+`;
+
+export const BtnsInInput = styled.span`
+  display: flex;
+  flex-direction: column;
+  button {
+    width: 1em;
+    height: 0.8em;
+    display: flex;
+    align-items: center;
+    svg {
+      opacity: 0.5;
+      color: #4a4a4a;
+      pointer-events: none;
+      transition: 120ms;
+    }
+    &:hover {
+      svg {
+        opacity: 0.8;
+      }
+    }
+    &:active {
+      svg {
+        opacity: 1;
+      }
+    }
   }
 `;
