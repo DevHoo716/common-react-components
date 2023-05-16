@@ -2,17 +2,19 @@ import styled from "styled-components";
 import { Between } from "../styles";
 
 export const InputWrap = styled(Between)`
-  width: 24em;
-  height: 3em;
-  padding: 0 1em;
-  border: 1px solid #d6d8dc;
+  box-sizing: border-box;
+  width: 24rem;
+  height: 3rem;
+  padding: 0 1rem;
+  border: 0.1rem solid #d6d8dc;
   cursor: text;
-  line-height: 1em;
-  align-items: baseline;
+  line-height: 1rem;
+  font-family: inherit;
   input {
     flex: 1;
     height: 100%;
-    font-size: 1em;
+    font-family: inherit;
+    font-size: 1rem;
     background: none;
     border: none;
     outline: none;
@@ -21,22 +23,23 @@ export const InputWrap = styled(Between)`
     }
   }
   span.label {
-    font-size: 1em;
+    font-size: 1rem;
     font-weight: 700;
     color: #4a4a4a;
-    padding-right: 0.5em;
+    padding-right: 0.5rem;
   }
   span.suffix,
   span.prefix {
+    font-size: 1rem;
     svg {
       color: #4a4a4a;
     }
   }
   span.prefix {
-    padding-right: 0.5em;
+    padding-right: 0.5rem;
   }
   span.suffix {
-    padding-left: 0.5em;
+    padding-left: 0.5rem;
   }
 `;
 
@@ -49,8 +52,8 @@ export const NumberInputWrap = styled(InputWrap)`
 export const SwitchInInput = styled.span`
   button {
     border: none;
-    width: 1.3em;
-    height: 1.3em;
+    width: 1.3rem;
+    height: 1.3rem;
   }
 `;
 
@@ -58,8 +61,8 @@ export const BtnsInInput = styled.span`
   display: flex;
   flex-direction: column;
   button {
-    width: 1em;
-    height: 0.8em;
+    width: 1rem;
+    height: 0.8rem;
     display: flex;
     align-items: center;
     svg {
