@@ -10,6 +10,7 @@ export const InputWrap = styled(Between)`
   cursor: text;
   line-height: 1rem;
   font-family: inherit;
+  align-items: baseline;
   input {
     flex: 1;
     height: 100%;
