@@ -11,7 +11,7 @@ export const SelectWrap = styled(Between)`
     align-items: center;
     width: 100%;
     height: 100%;
-    border: 0.1rem solid #d6d8dc;
+    border: 1px solid #d6d8dc;
     line-height: 1rem;
     color: #4a4a4a;
     padding: 0 1rem;
@@ -68,7 +68,7 @@ export const SelectWrap = styled(Between)`
     max-height: 14rem;
     padding: 0.2rem 0 0.2rem 0.2rem;
     background: #fff;
-    border: 0.1rem solid #d6d8dc;
+    border: 1px solid #d6d8dc;
     overflow-x: hidden;
     overflow-y: auto;
     &.ac {

@@ -6,7 +6,7 @@ export const InputWrap = styled(Between)`
   width: 24rem;
   height: 3rem;
   padding: 0 1rem;
-  border: 0.1rem solid #d6d8dc;
+  border: 1px solid #d6d8dc;
   cursor: text;
   line-height: 1rem;
   font-family: inherit;
