@@ -16,6 +16,13 @@ export const SelectWrap = styled(Between)`
     color: #4a4a4a;
     padding: 0 1rem;
     font-family: inherit;
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      & > * {
+        pointer-events: none;
+      }
+    }
     span.label {
       font-size: 1rem;
       font-weight: 700;
@@ -38,7 +45,7 @@ export const SelectWrap = styled(Between)`
         transform: rotate(90deg);
       }
     }
-    &:hover {
+    &:hover:not(.disabled) {
       svg.spinner {
         opacity: 0.8;
       }

@@ -29,7 +29,9 @@ export const Selector = (props: SelectorProps) => {
     () => props.options.find((i) => i.value === props.value),
     [props.value, props.options]
   );
-  const toggle = () => setAc(!ac);
+  const toggle = () => {
+    if (!props.disabled) setAc(!ac);
+  };
   const select = (val: string | number) => {
     props.setValue(val);
     setAc(false);
@@ -37,7 +39,11 @@ export const Selector = (props: SelectorProps) => {
 
   return (
     <SelectWrap className={props.className} id={props.id} ref={dom}>
-      <CenterBtn className="trigger" onClick={toggle} data-testid="selector">
+      <CenterBtn
+        className={classNames("trigger", { disabled: props.disabled })}
+        onClick={toggle}
+        data-testid="selector"
+      >
         {props.prefix ? (
           <span className="prefix" data-testid="prefix">
             {props.prefix}

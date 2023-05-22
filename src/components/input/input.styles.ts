@@ -11,6 +11,13 @@ export const InputWrap = styled(Between)`
   line-height: 1rem;
   font-family: inherit;
   align-items: baseline;
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    * {
+      pointer-events: none;
+    }
+  }
   input {
     flex: 1;
     height: 100%;

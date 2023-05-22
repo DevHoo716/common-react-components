@@ -1,6 +1,7 @@
 import { ChangeEvent, ReactNode, useRef } from "react";
 import { Base } from "../interface";
 import { InputWrap } from "./input.styles";
+import classNames from "classnames";
 
 export interface BaseInput extends Base {
   value: string;
@@ -31,7 +32,11 @@ export const Input = (props: InputProps) => {
   };
 
   return (
-    <InputWrap className={props.className} id={props.id} onClick={onClick}>
+    <InputWrap
+      className={classNames(props.className, { disabled: props.disabled })}
+      id={props.id}
+      onClick={onClick}
+    >
       {props.prefix ? (
         <span className="prefix" data-testid="prefix">
           {props.prefix}
@@ -49,6 +54,7 @@ export const Input = (props: InputProps) => {
         onChange={onChange}
         ref={dom}
         data-testid="input"
+        disabled={props.disabled}
       />
       {props.suffix ? (
         <span className="suffix" data-testid="suffix">

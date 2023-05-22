@@ -4,6 +4,7 @@ import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 import { BtnsInInput, NumberInputWrap } from "./input.styles";
 import { FlatBtn } from "../styles";
 import { BaseInput } from "./Input";
+import classNames from "classnames";
 
 export interface NumberInputProps extends BaseInput {
   label?: string;
@@ -44,7 +45,7 @@ export const NumberInput = (props: NumberInputProps) => {
 
   return (
     <NumberInputWrap
-      className={props.className}
+      className={classNames(props.className, { disabled: props.disabled })}
       id={props.id}
       onClick={onClick}
     >
@@ -59,6 +60,7 @@ export const NumberInput = (props: NumberInputProps) => {
         onChange={onChange}
         ref={dom}
         data-testid="input"
+        disabled={props.disabled}
       />
       {props.spinner && (
         <BtnsInInput>
