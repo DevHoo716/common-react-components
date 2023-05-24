@@ -68,7 +68,7 @@ export const NumberInput = (props: NumberInputProps) => {
             <FontAwesomeIcon icon={faCaretUp} size="xs" />
           </FlatBtn>
           <FlatBtn onClick={down} data-testid="down">
-            <FontAwesomeIcon icon={faCaretDown} />
+            <FontAwesomeIcon icon={faCaretDown} size="xs" />
           </FlatBtn>
         </BtnsInInput>
       )}

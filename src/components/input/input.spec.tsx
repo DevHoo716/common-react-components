@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { describe, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Input, PasswordInput, NumberInput } from ".";
+import { Input, PasswordInput, NumberInput, SwapInputs } from ".";
 
 describe("Normal Input", () => {
   it("with value", async () => {
@@ -123,5 +123,81 @@ describe("Number Input", () => {
 
     await userEvent.type(input, "1");
     expect(fn).toBeCalledWith("2");
+  });
+});
+
+describe("Swap Input", () => {
+  const item1 = { id: "BNB", label: "BNB" };
+  const item2 = { id: "ETH", label: "ETH" };
+  const pairs = [
+    {
+      item1,
+      item2,
+    },
+  ];
+  const fn1 = vi.fn(() => null);
+  const fn2 = vi.fn(() => null);
+  it("do nothing when no item selected", async () => {
+    render(
+      <div>
+        <SwapInputs
+          pairs={pairs}
+          fromItem={undefined}
+          setFromItem={fn1}
+          toItem={undefined}
+          setToItem={fn2}
+          fromAmount=""
+          setFromAmount={() => ""}
+          toAmount=""
+          setToAmount={() => ""}
+        />
+      </div>
+    );
+    const btn = screen.getByTestId("button");
+    await userEvent.click(btn);
+    expect(fn1).not.toBeCalled();
+    expect(fn2).not.toBeCalled();
+  });
+  it("swap items when both items selected", async () => {
+    render(
+      <div>
+        <SwapInputs
+          pairs={pairs}
+          fromItem={item1}
+          setFromItem={fn1}
+          toItem={item2}
+          setToItem={fn2}
+          fromAmount=""
+          setFromAmount={() => ""}
+          toAmount=""
+          setToAmount={() => ""}
+        />
+      </div>
+    );
+    const btn = screen.getByTestId("button");
+    await userEvent.click(btn);
+    expect(fn1).toBeCalledWith(item2);
+    expect(fn2).toBeCalledWith(item1);
+  });
+  it("swap items when one item selected", async () => {
+    render(
+      <div>
+        <SwapInputs
+          pairs={pairs}
+          fromItem={item1}
+          setFromItem={fn1}
+          toItem={undefined}
+          setToItem={fn2}
+          fromAmount=""
+          setFromAmount={() => ""}
+          toAmount=""
+          setToAmount={() => ""}
+        />
+      </div>
+    );
+    const btn = screen.getByTestId("button");
+    await userEvent.click(btn);
+    expect(fn1).toBeCalledWith(undefined);
+    expect(fn2).toBeCalledWith(item1);
   });
 });

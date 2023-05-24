@@ -91,3 +91,35 @@ export const BtnsInInput = styled.span`
     }
   }
 `;
+
+export const SwitchBtn = styled.button`
+  display: block;
+  outline: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 50%;
+  background: #f2f2f2;
+  width: 2rem;
+  height: 2rem;
+  margin: 0.5rem 11rem;
+  padding: 0;
+  svg {
+    width: 1rem;
+    height: 1rem;
+    padding: 0.5rem;
+    transform: rotate(90deg);
+    color: #4a4a4a;
+    opacity: 0.8;
+    transition: 120ms;
+  }
+  &:hover {
+    svg {
+      opacity: 0.9;
+    }
+  }
+  &:active {
+    svg {
+      opacity: 1;
+    }
+  }
+`;
