@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Center } from "../styles";
 
 export const ModalWrap = styled.div`
   position: absolute;
@@ -33,11 +34,42 @@ export const ScrollWrap = styled.div`
   }
 `;
 
-export const ModalContent = styled.div<{ width?: string; height?: string }>`
+export const ModalContent = styled(Center)<{ width?: string; height?: string }>`
+  flex-direction: column;
   width: ${(props) => props.width || "40rem"};
   height: ${(props) => props.height || "12rem"};
   border: 1px solid #d6d8dc;
   background: #f2f2f2;
   margin: auto;
   box-shadow: 0 0 2rem #ccc;
+`;
+
+export const ModalHeader = styled(Center)`
+  box-sizing: border-box;
+  width: 100%;
+  height: 3.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4a4a4a;
+  cursor: default;
+`;
+
+export const ModalBody = styled(Center)`
+  box-sizing: border-box;
+  width: 100%;
+  flex: 1;
+  padding: 0 2rem;
+  font-size: 1rem;
+  color: #4a4a4a;
+  cursor: default;
+`;
+
+export const ModalFooter = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  text-align: right;
+  padding: 1rem 2rem;
+  button {
+    margin-left: 0.5rem;
+  }
 `;
