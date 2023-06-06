@@ -1,5 +1,5 @@
 export * from "./input";
-export * from "./button/SwitchBtn";
 export * from "./select";
+export * from "./button";
 export * from "./group";
 export * from "./modal";

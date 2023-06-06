@@ -2,14 +2,14 @@ import { MouseEvent, ReactNode } from "react";
 import { Base } from "../interface";
 import { SwitchWrap } from "./button.styles";
 
-interface BtnProps extends Base {
+export interface SwitchBtnProps extends Base {
   isON: boolean;
   switch: (e: MouseEvent<HTMLButtonElement>) => void;
   onLabel: ReactNode;
   offLabel: ReactNode;
   disabled?: boolean;
 }
-const SwitchBtn = (props: BtnProps) => {
+export const SwitchBtn = (props: SwitchBtnProps) => {
   return (
     <SwitchWrap
       className={props.className}
