@@ -73,3 +73,12 @@ export const ModalFooter = styled.div`
     margin-left: 0.5rem;
   }
 `;
+
+export const WarningLabel = styled(Center)`
+  svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: #ffc107;
+    margin-right: 0.5rem;
+  }
+`;
