@@ -25,3 +25,12 @@ export const FlatBtn = styled.button`
   padding: 0;
   cursor: pointer;
 `;
+
+export const CenterBtn = styled.button`
+  display: flex;
+  align-items: baseline;
+  background: none;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+`;
