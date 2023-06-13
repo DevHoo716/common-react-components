@@ -28,17 +28,22 @@ export const Virtualized = (props: VirtualizedProps) => {
       if (index === 0) {
         arr.push({ height, offset: 0 });
       } else {
-        arr.push({ height, offset: height + arr[index - 1]?.offset });
+        arr.push({
+          height,
+          offset: arr[index - 1]?.height + arr[index - 1]?.offset,
+        });
       }
     });
     return arr;
   }, [props.itemHeight]);
 
   useEffect(() => {
+    if (!itemMeta.length) return;
     if (endAt === 0) setEndAt(findIndex(itemMeta, props.height));
   }, [itemMeta, endAt, props.height]);
 
   const listHeight = useMemo(() => {
+    if (!itemMeta.length) return 0;
     const meta = itemMeta[itemMeta.length - 1];
     return meta.height + meta.offset;
   }, [itemMeta]);
@@ -75,7 +80,7 @@ export const Virtualized = (props: VirtualizedProps) => {
       <ListWrap
         className="list-wrap"
         height={listHeight}
-        paddingTop={itemMeta[startAt].offset}
+        paddingTop={itemMeta[startAt]?.offset || 0}
       >
         {Array(props.itemCount)
           .fill(true)
