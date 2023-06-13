@@ -1,7 +1,9 @@
 import {
   ReactNode,
   UIEvent,
+  forwardRef,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -14,10 +16,18 @@ export interface VirtualizedProps extends Base {
   itemCount: number;
   itemHeight: number[];
   render: (index: number) => ReactNode;
-  alignTo?: number;
+  onScroll?: (direction: "forward" | "backward") => void;
 }
 
-export const Virtualized = (props: VirtualizedProps) => {
+export interface VirtualizedRef {
+  alignTo: (index: number, behavior?: "smooth" | "auto") => void;
+  getScrollTop: () => number;
+  stayScrollTop: (top: number, behavior?: "smooth" | "auto") => void;
+  getStartAt: () => number;
+  getEndAt: () => number;
+}
+
+export const Virtualized = forwardRef((props: VirtualizedProps, ref) => {
   const [startAt, setStartAt] = useState(0);
   const [endAt, setEndAt] = useState(0);
   const dom = useRef<HTMLDivElement>(null);
@@ -57,17 +67,34 @@ export const Virtualized = (props: VirtualizedProps) => {
     );
     const val1 = findIndex(itemMeta, scrollOffset);
     const val2 = findIndex(itemMeta, scrollOffset + clientHeight);
+    const direction = val1 >= startAt ? "forward" : "backward";
     setStartAt(val1);
     setEndAt(val2 + 1);
+    if (props.onScroll) props.onScroll(direction);
   };
 
-  useEffect(() => {
-    if (props.alignTo !== undefined && itemMeta[props.alignTo] && dom.current) {
-      dom.current.scrollTo({
-        top: itemMeta[props.alignTo]?.offset,
-      });
-    }
-  }, [props.alignTo, itemMeta]);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        alignTo(index: number, behavior?: "smooth" | "auto") {
+          dom.current?.scrollTo({
+            top: itemMeta[index]?.offset,
+            behavior: behavior || "smooth",
+          });
+        },
+        getScrollTop() {
+          return dom.current?.scrollTop;
+        },
+        stayScrollTop(top: number, behavior?: "smooth" | "auto") {
+          return dom.current?.scrollTo({ top, behavior: behavior || "smooth" });
+        },
+        getStartAt: () => startAt,
+        getEndAt: () => endAt,
+      };
+    },
+    [itemMeta, startAt, endAt]
+  );
 
   return (
     <ScrollWrap
@@ -97,7 +124,7 @@ export const Virtualized = (props: VirtualizedProps) => {
       </ListWrap>
     </ScrollWrap>
   );
-};
+});
 
 const findIndex = (
   meta: { height: number; offset: number }[],
