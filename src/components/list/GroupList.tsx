@@ -111,7 +111,7 @@ export const GroupList = (props: GroupListProps) => {
               />
             );
           } else {
-            return <div onClick={() => null}>{i.label}</div>;
+            return <div className="group-item">{i.label}</div>;
           }
         }}
         ref={ref}
