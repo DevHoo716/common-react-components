@@ -49,6 +49,21 @@ export const InputWrap = styled(Between)`
   span.suffix {
     padding-left: 0.5rem;
   }
+  span.loading {
+    opacity: 0.6;
+    svg {
+      animation: loading 1s infinite forwards;
+    }
+  }
+
+  @keyframes loading {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 export const NumberInputWrap = styled(InputWrap)`

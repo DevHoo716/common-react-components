@@ -2,6 +2,8 @@ import { ChangeEvent, ReactNode, useRef } from "react";
 import { Base } from "../interface";
 import { InputWrap } from "./input.styles";
 import classNames from "classnames";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 export interface BaseInput extends Base {
   value: string;
@@ -14,6 +16,7 @@ export interface InputProps extends BaseInput {
   prefix?: ReactNode;
   suffix?: ReactNode;
   disabled?: boolean;
+  loading?: boolean;
   validate?: (value: string) => boolean;
   translate?: (value: string) => string;
 }
@@ -54,9 +57,13 @@ export const Input = (props: InputProps) => {
         onChange={onChange}
         ref={dom}
         data-testid="input"
-        disabled={props.disabled}
+        disabled={props.disabled || props.loading}
       />
-      {props.suffix ? (
+      {props.loading ? (
+        <span className="suffix loading" data-testid="suffix">
+          <FontAwesomeIcon icon={faSpinner} />
+        </span>
+      ) : props.suffix ? (
         <span className="suffix" data-testid="suffix">
           {props.suffix}
         </span>
