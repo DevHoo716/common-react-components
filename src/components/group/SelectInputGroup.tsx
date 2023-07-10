@@ -11,10 +11,12 @@ export interface SelectInputGroupProps extends Base {
   options: { value: string | number; label: ReactNode }[];
   value: string;
   setValue: (val: string) => void;
+  selectPlaceholder?: string;
   placeholder?: string;
   prefix?: ReactNode;
   suffix?: ReactNode;
   disabled?: boolean;
+  loading?: boolean;
   validate?: (value: string) => boolean;
   translate?: (value: string) => string;
 }
@@ -26,6 +28,7 @@ export const SelectInputGroup = (props: SelectInputGroupProps) => {
       id={props.id}
     >
       <Selector
+        placeholder={props.selectPlaceholder || "Select"}
         value={props.selected}
         setValue={props.setSelected}
         options={props.options}
@@ -41,6 +44,7 @@ export const SelectInputGroup = (props: SelectInputGroupProps) => {
         validate={props.validate}
         translate={props.translate}
         disabled={props.disabled}
+        loading={props.loading}
       />
     </SelectInputWrap>
   );

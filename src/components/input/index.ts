@@ -5,4 +5,4 @@ export type { PasswordInputProps } from "./PasswordInput";
 export { NumberInput } from "./NumberInput";
 export type { NumberInputProps } from "./NumberInput";
 export { SwapInputs } from "./SwapInputs";
-export type { Item, Pair, SwapInputsProps } from "./SwapInputs";
+export type { TokenLabel, Pair, SwapInputsProps } from "./SwapInputs";

@@ -150,6 +150,15 @@ describe("Swap Input", () => {
           setFromAmount={() => ""}
           toAmount=""
           setToAmount={() => ""}
+          getRate={(a: string | number, b: string | number) =>
+            new Promise((res, rej) => {
+              if (a && b) {
+                return res([1.2, 0.8]);
+              } else {
+                return rej("No pair selected yet.");
+              }
+            })
+          }
         />
       </div>
     );
@@ -171,6 +180,15 @@ describe("Swap Input", () => {
           setFromAmount={() => ""}
           toAmount=""
           setToAmount={() => ""}
+          getRate={(a: string | number, b: string | number) =>
+            new Promise((res, rej) => {
+              if (a && b) {
+                return res([1.2, 0.8]);
+              } else {
+                return rej("No pair selected yet.");
+              }
+            })
+          }
         />
       </div>
     );
@@ -192,6 +210,15 @@ describe("Swap Input", () => {
           setFromAmount={() => ""}
           toAmount=""
           setToAmount={() => ""}
+          getRate={(a: string | number, b: string | number) =>
+            new Promise((res, rej) => {
+              if (a && b) {
+                return res([1.2, 0.8]);
+              } else {
+                return rej("No pair selected yet.");
+              }
+            })
+          }
         />
       </div>
     );

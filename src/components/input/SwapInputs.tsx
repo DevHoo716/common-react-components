@@ -1,32 +1,35 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Base } from "../interface";
 import { SelectInputGroup } from "../group/SelectInputGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { SwitchBtn } from "./input.styles";
+import { debounce } from "../hooks/debounce";
 
-export interface Item {
+export interface TokenLabel {
   id: number | string;
   label: ReactNode;
 }
 export interface Pair {
   id?: number | string;
-  item1: Item;
-  item2: Item;
+  item1: TokenLabel;
+  item2: TokenLabel;
 }
 
 export interface SwapInputsProps extends Base {
   pairs: Pair[];
-  fromItem: Item | undefined;
-  toItem: Item | undefined;
-  setFromItem: (val: Item | undefined) => void;
-  setToItem: (val: Item | undefined) => void;
+  fromItem: TokenLabel | undefined;
+  toItem: TokenLabel | undefined;
+  setFromItem: (val: TokenLabel | undefined) => void;
+  setToItem: (val: TokenLabel | undefined) => void;
   fromAmount: string;
   setFromAmount: (val: string) => void;
   toAmount: string;
   setToAmount: (val: string) => void;
-  fromRate?: (val: string) => string;
-  toRate?: (val: string) => string;
+  getRate: (
+    fromItemId: number | string,
+    toItemId: number | string
+  ) => Promise<[number, number]>;
   fromLabel?: string;
   toLabel?: string;
   fromPlaceholder?: string;
@@ -35,12 +38,16 @@ export interface SwapInputsProps extends Base {
   toPrefix?: string;
   fromSuffix?: string;
   toSuffix?: string;
+  fromDisabled?: boolean;
+  toDisabled?: boolean;
 }
 
 export const SwapInputs = (props: SwapInputsProps) => {
   const itemMap = useItemMap(props.pairs);
   const fromOptions = useAllItems(props.pairs);
   const toOptions = useMatchItems(props.pairs, props.fromItem);
+  const [fromLoading, setFromLoading] = useState(false);
+  const [toLoading, setToLoading] = useState(false);
 
   const selectFrom = (val: string | number) => {
     const item = itemMap.get(val);
@@ -64,16 +71,51 @@ export const SwapInputs = (props: SwapInputsProps) => {
     if (item) props.setToItem(item);
   };
 
-  const setFromValue = (val: string) => {
+  const updateToAmount = useRef(
+    debounce(async (fromItem: TokenLabel, toItem: TokenLabel, val: string) => {
+      try {
+        const [rate] = await props.getRate(fromItem.id, toItem.id);
+        if (rate && !Number.isNaN(val)) {
+          props.setToAmount((rate * Number(val)).toString());
+        } else {
+          props.setToAmount("");
+        }
+      } catch (err) {
+        props.setToAmount("");
+      } finally {
+        setToLoading(false);
+      }
+    }, 500)
+  ).current;
+  const setFromValue = async (val: string) => {
     props.setFromAmount(val);
-    if (props.toRate && !Number.isNaN(val)) {
-      props.setToAmount(props.toRate(val));
+    if (props.fromItem && props.toItem) {
+      setToLoading(true);
+      updateToAmount(props.fromItem, props.toItem, val);
     }
   };
-  const setToValue = (val: string) => {
+
+  const updateFromAmount = useRef(
+    debounce(async (fromItem: TokenLabel, toItem: TokenLabel, val: string) => {
+      try {
+        const [_, rate] = await props.getRate(fromItem.id, toItem.id);
+        if (rate && !Number.isNaN(val)) {
+          props.setFromAmount((rate * Number(val)).toString());
+        } else {
+          props.setFromAmount("");
+        }
+      } catch (err) {
+        props.setFromAmount("");
+      } finally {
+        setFromLoading(false);
+      }
+    }, 500)
+  ).current;
+  const setToValue = async (val: string) => {
     props.setToAmount(val);
-    if (props.fromRate && !Number.isNaN(val)) {
-      props.setFromAmount(props.fromRate(val));
+    if (props.fromItem && props.toItem) {
+      setFromLoading(true);
+      updateFromAmount(props.fromItem, props.toItem, val);
     }
   };
 
@@ -100,8 +142,15 @@ export const SwapInputs = (props: SwapInputsProps) => {
         options={fromOptions}
         value={props.fromAmount}
         setValue={setFromValue}
+        placeholder={props.fromPlaceholder}
+        disabled={props.fromDisabled}
+        loading={fromLoading}
       />
-      <SwitchBtn onClick={onSwitch} data-testid="button">
+      <SwitchBtn
+        onClick={onSwitch}
+        data-testid="button"
+        disabled={props.fromDisabled && props.toDisabled}
+      >
         <FontAwesomeIcon icon={faRepeat} />
       </SwitchBtn>
       <SelectInputGroup
@@ -110,15 +159,18 @@ export const SwapInputs = (props: SwapInputsProps) => {
         options={toOptions}
         value={props.toAmount}
         setValue={setToValue}
+        placeholder={props.toPlaceholder}
+        disabled={props.toDisabled}
+        loading={toLoading}
       />
     </>
   );
 };
 
 const useItemMap = (pairs: Pair[]) => {
-  const [val, setVal] = useState<Map<string | number, Item>>(new Map());
+  const [val, setVal] = useState<Map<string | number, TokenLabel>>(new Map());
   useEffect(() => {
-    const map = new Map<string | number, Item>();
+    const map = new Map<string | number, TokenLabel>();
     pairs.forEach((pair) => {
       map.set(pair.item1.id, pair.item1);
       map.set(pair.item2.id, pair.item2);
@@ -133,7 +185,7 @@ const useAllItems = (pairs: Pair[]) => {
     { value: string | number; label: ReactNode }[]
   >([]);
   useEffect(() => {
-    const map = new Map<string | number, Item>();
+    const map = new Map<string | number, TokenLabel>();
     pairs.forEach((pair) => {
       map.set(pair.item1.id, pair.item1);
       map.set(pair.item2.id, pair.item2);
@@ -145,13 +197,13 @@ const useAllItems = (pairs: Pair[]) => {
   return items;
 };
 
-const useMatchItems = (pairs: Pair[], item?: Item) => {
+const useMatchItems = (pairs: Pair[], item?: TokenLabel) => {
   const [items, setItems] = useState<
     { value: string | number; label: ReactNode }[]
   >([]);
   useEffect(() => {
     if (!item) {
-      const map = new Map<string | number, Item>();
+      const map = new Map<string | number, TokenLabel>();
       pairs.forEach((pair) => {
         map.set(pair.item1.id, pair.item1);
         map.set(pair.item2.id, pair.item2);
