@@ -62,20 +62,32 @@ export const SwapInputs = (props: SwapInputsProps) => {
         if (!pair) {
           props.setToItem(undefined);
           props.setToAmount("");
+        } else {
+          if (props.toAmount) {
+            setFromLoading(true);
+            updateFromAmount(item, props.toItem, props.toAmount);
+          }
         }
       }
     }
   };
   const selectTo = (val: string | number) => {
     const item = itemMap.get(val);
-    if (item) props.setToItem(item);
+    if (item) {
+      props.setToItem(item);
+      if (props.fromItem && props.fromAmount) {
+        setToLoading(true);
+        updateToAmount(props.fromItem, item, props.fromAmount);
+      }
+    }
   };
 
   const updateToAmount = useRef(
     debounce(async (fromItem: TokenLabel, toItem: TokenLabel, val: string) => {
+      console.log(fromItem, toItem, val);
       try {
         const [rate] = await props.getRate(fromItem.id, toItem.id);
-        if (rate && !Number.isNaN(val)) {
+        if (rate && val && !Number.isNaN(val)) {
           props.setToAmount((rate * Number(val)).toString());
         } else {
           props.setToAmount("");
@@ -99,7 +111,7 @@ export const SwapInputs = (props: SwapInputsProps) => {
     debounce(async (fromItem: TokenLabel, toItem: TokenLabel, val: string) => {
       try {
         const [_, rate] = await props.getRate(fromItem.id, toItem.id);
-        if (rate && !Number.isNaN(val)) {
+        if (rate && val && !Number.isNaN(val)) {
           props.setFromAmount((rate * Number(val)).toString());
         } else {
           props.setFromAmount("");
