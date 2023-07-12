@@ -12,9 +12,9 @@ export const ScrollWrap = styled.div<{ height: number }>`
     background: #f2f2f2;
     border-radius: 1rem;
     transition: 120ms;
-    &:hover {
-      background: #ddd;
-    }
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: #ddd;
   }
 `;
 
@@ -34,8 +34,8 @@ export const GroupListWrap = styled.div<{ height: number }>`
   box-sizing: border-box;
   width: 100%;
   height: ${(props) => props.height}px;
-  overflowx: hidden;
-  overflowy: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   &::-webkit-scrollbar {
     width: 0.5rem;
   }
@@ -56,6 +56,10 @@ export const GroupLabelWrap = styled(Between)<{ height: number }>`
   width: 100%;
   height: ${(props) => props.height}px;
   cursor: pointer;
+  padding: 0 1rem;
+  border: 1px solid #d6d8dc;
+  background: #f2f2f2;
+  color: #4a4a4a;
   span.spinner {
     display: block;
     transition: 120ms;
@@ -75,4 +79,5 @@ export const GroupItemWrap = styled(Center)<{
   width: 100%;
   height: ${(props) => props.height}px;
   cursor: ${(props) => (props.clickable ? "pointer" : "default")};
+  justify-content: flex-start;
 `;
