@@ -139,16 +139,16 @@ export const GroupList = (props: GroupListProps) => {
     updateInEndGroup(offsets);
   };
 
-  // If the group's top end is far away from the top of the view box right now, it will scroll into view after clicking.
+  // If the group's top end is invisible right now, it will scroll into view after clicking.
   // If not, the group will be folded or unfolded after clicking.
-  // To judge whether the top end is far away enough, compare props.alignLimit to the distance.
-  const labelOnClick = (groupIndex: number, groupDom: Element) => {
+  // To judge whether the top end is far away enough to trigger scrolling instead of folding/unfolding, compare props.alignLimit to the distance.
+  const labelOnClick = (groupIndex: number) => {
     if (dom.current) {
       if (
-        Math.abs(dom.current.scrollTop - offsets[groupIndex]) >
+        dom.current.scrollTop - offsets[groupIndex] >
         (props.alignLimit || 20)
       ) {
-        groupDom.scrollIntoView({ behavior: "smooth" });
+        dom.current.scrollTo({ top: offsets[groupIndex], behavior: "smooth" });
       } else {
         handleFolded(groupIndex);
       }
@@ -187,9 +187,7 @@ export const GroupList = (props: GroupListProps) => {
             key={startAt + index}
             group={group}
             offset={offsets[startAt + index]}
-            labelOnClick={(groupDom: Element) =>
-              labelOnClick(startAt + index, groupDom)
-            }
+            labelOnClick={() => labelOnClick(startAt + index)}
             itemOnClick={(id: ItemInGroup["id"]) => itemOnClick(id)}
             folded={folded[startAt + index]}
             groupHeight={heights[startAt + index]}
@@ -217,7 +215,7 @@ interface GroupProps {
   offset: number;
   folded: boolean;
   groupHeight: number;
-  labelOnClick: (groupDom: Element) => void;
+  labelOnClick: () => void;
   itemOnClick?: (id: ItemInGroup["id"]) => void;
   interval?: [number, number];
   innerOffset?: number;
@@ -225,8 +223,6 @@ interface GroupProps {
 
 export const Group = (props: GroupProps) => {
   const dom = useRef<HTMLDivElement>(null);
-
-  const onClick = () => dom.current && props.labelOnClick(dom.current);
 
   if (!props.group.length) return null;
   return (
@@ -237,14 +233,18 @@ export const Group = (props: GroupProps) => {
       }}
     >
       {props.folded ? (
-        <GroupLabel height={props.group[0].height} onClick={onClick} ac={false}>
+        <GroupLabel
+          height={props.group[0].height}
+          onClick={props.labelOnClick}
+          ac={false}
+        >
           {props.group[0].label}
         </GroupLabel>
       ) : props.interval ? (
         <>
           <GroupLabel
             height={props.group[0].height}
-            onClick={onClick}
+            onClick={props.labelOnClick}
             ac={false}
           >
             {props.group[0].label}
@@ -274,7 +274,12 @@ export const Group = (props: GroupProps) => {
         <>
           {props.group.map((i: ItemInGroup, index: number) =>
             !index ? (
-              <GroupLabel key={index} height={i.height} onClick={onClick} ac>
+              <GroupLabel
+                key={index}
+                height={i.height}
+                onClick={props.labelOnClick}
+                ac
+              >
                 {i.label}
               </GroupLabel>
             ) : (
