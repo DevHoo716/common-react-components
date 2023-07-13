@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ReactNode,
   UIEvent,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { GroupItemWrap, GroupLabelWrap, GroupListWrap } from "./list.styles";
+import classNames from "classnames";
 
 export interface ItemInGroup {
   label: string;
@@ -26,7 +26,7 @@ export interface GroupListProps {
 }
 
 export const GroupList = (props: GroupListProps) => {
-  // List's height when every group is unfolded. It's the default and max height of the group list.
+  // Groups' unfoled heights. It's the default and max height of each group.
   const fullHeights = props.groups.map((group) =>
     group.reduce((sum, current) => sum + current.height, 0)
   );
@@ -42,14 +42,6 @@ export const GroupList = (props: GroupListProps) => {
   const [folded, setFolded] = useState(Array(props.groups.length).fill(false));
   // Height of each group. The height changes when the group is folded or unfolded.
   const [heights, setHeights] = useState(fullHeights);
-  // The index interval of the visible items in the first visible group.
-  const [intervalInStartAt, setIntervalInStartAt] = useState<
-    [number, number] | undefined
-  >(undefined);
-  // The index interval of the visible items in the last visible group.
-  const [intervalInEndAt, setIntervalInEndAt] = useState<
-    [number, number] | undefined
-  >(undefined);
 
   // List's current height.
   const listHeight = useMemo(
@@ -58,16 +50,6 @@ export const GroupList = (props: GroupListProps) => {
   );
   // Offset, to the top end of the list wrap, of each group.
   const offsets = useMemo(() => getOffsets(heights), [heights]);
-  // Offset, to the top end of the group wrap, of each item in the first visible group.
-  const offsetsInStartGroup = useMemo(
-    () => getOffsets(props.groups[startAt].map((i) => i.height)),
-    [props.groups, startAt]
-  );
-  // Offset, to the top end of the group wrap, of each item in the last visible group.
-  const offsetsInEndGroup = useMemo(() => {
-    if (startAt + 1 === endAt || !props.groups[endAt - 1]) return undefined;
-    return getOffsets(props.groups[endAt - 1].map((i) => i.height));
-  }, [props.groups, startAt, endAt]);
 
   // Fold and unfold group by index. Height of the target group will change. Offsets of other groups will change.
   const handleFolded = (index: number) => {
@@ -97,46 +79,11 @@ export const GroupList = (props: GroupListProps) => {
     setStartAt(val1);
     setEndAt(val2 + 1);
   };
-  // Find the visible items in the first visible group.
-  const updateInStartGroup = useCallback(
-    (offsets: number[]) => {
-      if (!dom.current) return setIntervalInStartAt(undefined);
-      const { scrollTop, scrollHeight, clientHeight } = dom.current;
-      const scrollOffset = Math.max(
-        0,
-        Math.min(scrollTop, scrollHeight - clientHeight) - offsets[startAt]
-      );
-      const val1 = findIndex(offsetsInStartGroup, scrollOffset);
-      const val2 =
-        startAt + 1 === endAt
-          ? findIndex(offsetsInStartGroup, scrollOffset + clientHeight)
-          : offsetsInStartGroup.length;
-      setIntervalInStartAt([val1, val2 + 1]);
-    },
-    [offsetsInStartGroup, startAt, endAt]
-  );
-  // Find the visible items in the last visible group.
-  const updateInEndGroup = useCallback(
-    (offsets: number[]) => {
-      if (!endAt || startAt + 1 === endAt || !offsetsInEndGroup || !dom.current)
-        return;
-      const { scrollTop, scrollHeight, clientHeight } = dom.current;
-      const scrollOffset =
-        Math.max(0, Math.min(scrollTop, scrollHeight - clientHeight)) +
-        clientHeight -
-        offsets[endAt - 1];
-      const val = findIndex(offsetsInEndGroup, scrollOffset);
-      setIntervalInEndAt([0, val + 1]);
-    },
-    [offsetsInEndGroup, startAt, endAt]
-  );
 
   // Update when the list scrolls.
   const onScroll = (e: UIEvent<HTMLDivElement>) => {
     e.stopPropagation();
     update(offsets);
-    updateInStartGroup(offsets);
-    updateInEndGroup(offsets);
   };
 
   // If the group's top end is invisible right now, it will scroll into view after clicking.
@@ -168,11 +115,7 @@ export const GroupList = (props: GroupListProps) => {
   }, [offsets, endAt, props.height]);
 
   // Update after any group's folding or unfolding.
-  useEffect(() => {
-    update(offsets);
-    updateInStartGroup(offsets);
-    updateInEndGroup(offsets);
-  }, [offsets, updateInStartGroup, updateInEndGroup]);
+  useEffect(() => update(offsets), [offsets]);
 
   return (
     <GroupListWrap height={props.height} onScroll={onScroll} ref={dom}>
@@ -188,21 +131,13 @@ export const GroupList = (props: GroupListProps) => {
             group={group}
             offset={offsets[startAt + index]}
             labelOnClick={() => labelOnClick(startAt + index)}
-            itemOnClick={(id: ItemInGroup["id"]) => itemOnClick(id)}
+            itemOnClick={
+              props.onItemClicked
+                ? (id: ItemInGroup["id"]) => itemOnClick(id)
+                : undefined
+            }
             folded={folded[startAt + index]}
             groupHeight={heights[startAt + index]}
-            interval={
-              index === 0
-                ? intervalInStartAt
-                : index === endAt - startAt - 1
-                ? intervalInEndAt
-                : undefined
-            }
-            innerOffset={
-              index === 0 && intervalInStartAt
-                ? offsetsInStartGroup[intervalInStartAt[0]]
-                : undefined
-            }
           />
         ))}
       </div>
@@ -217,86 +152,39 @@ interface GroupProps {
   groupHeight: number;
   labelOnClick: () => void;
   itemOnClick?: (id: ItemInGroup["id"]) => void;
-  interval?: [number, number];
-  innerOffset?: number;
 }
 
 export const Group = (props: GroupProps) => {
-  const dom = useRef<HTMLDivElement>(null);
-
   if (!props.group.length) return null;
   return (
-    <div
-      ref={dom}
-      style={{
-        height: `${props.groupHeight}px`,
-      }}
-    >
-      {props.folded ? (
-        <GroupLabel
-          height={props.group[0].height}
-          onClick={props.labelOnClick}
-          ac={false}
-        >
-          {props.group[0].label}
-        </GroupLabel>
-      ) : props.interval ? (
+    <>
+      <GroupLabel
+        height={props.group[0].height}
+        onClick={props.labelOnClick}
+        ac={!props.folded}
+      >
+        {props.group[0].label}
+      </GroupLabel>
+      {props.folded ? null : (
         <>
-          <GroupLabel
-            height={props.group[0].height}
-            onClick={props.labelOnClick}
-            ac={false}
-          >
-            {props.group[0].label}
-          </GroupLabel>
-          {props.interval[0] > 0 && props.innerOffset !== undefined && (
-            <div
-              style={{
-                height: `${props.innerOffset - props.group[0].height}px`,
-              }}
-            />
-          )}
           {props.group
-            .slice(Math.max(1, props.interval[0]), props.interval[1])
+            .slice(1, props.group.length + 1)
             .map((i: ItemInGroup, index: number) => (
               <GroupItem
                 key={index}
                 height={i.height}
-                onClick={() =>
-                  props.itemOnClick ? props.itemOnClick(i.id) : undefined
+                onClick={
+                  props.itemOnClick
+                    ? () => props.itemOnClick && props.itemOnClick(i.id)
+                    : undefined
                 }
               >
-                {i.label} {index + Math.max(1, (props.interval || [0])[0])}
+                {i.label}
               </GroupItem>
             ))}
         </>
-      ) : (
-        <>
-          {props.group.map((i: ItemInGroup, index: number) =>
-            !index ? (
-              <GroupLabel
-                key={index}
-                height={i.height}
-                onClick={props.labelOnClick}
-                ac
-              >
-                {i.label}
-              </GroupLabel>
-            ) : (
-              <GroupItem
-                key={index}
-                height={i.height}
-                onClick={() =>
-                  props.itemOnClick ? props.itemOnClick(i.id) : undefined
-                }
-              >
-                {i.label} {index}
-              </GroupItem>
-            )
-          )}
-        </>
       )}
-    </div>
+    </>
   );
 };
 
@@ -309,12 +197,7 @@ const GroupLabel = (props: {
   return (
     <GroupLabelWrap height={props.height} onClick={props.onClick}>
       {props.children}
-      <span
-        className="spinner"
-        style={{
-          transform: `rotate(${props.ac ? 90 : 0}deg)`,
-        }}
-      >
+      <span className={classNames("spinner", { ac: props.ac })}>
         <FontAwesomeIcon icon={faCaretLeft} />
       </span>
     </GroupLabelWrap>

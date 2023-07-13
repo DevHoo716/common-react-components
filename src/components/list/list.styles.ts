@@ -62,11 +62,15 @@ export const GroupLabelWrap = styled(Between)<{ height: number }>`
   color: #4a4a4a;
   span.spinner {
     display: block;
-    transition: 120ms;
     svg {
       width: 1rem;
       height: 1rem;
       color: #4a4a4a;
+      transition: 120ms;
+      transform: rotate(0);
+    }
+    &.ac svg {
+      transform: rotate(-90deg);
     }
   }
 `;
