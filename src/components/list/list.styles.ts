@@ -60,6 +60,7 @@ export const GroupLabelWrap = styled(Between)<{ height: number }>`
   border: 1px solid #d6d8dc;
   background: #f2f2f2;
   color: #4a4a4a;
+  user-select: none;
   span.spinner {
     display: block;
     svg {
@@ -83,5 +84,6 @@ export const GroupItemWrap = styled(Center)<{
   width: 100%;
   height: ${(props) => props.height}px;
   cursor: ${(props) => (props.clickable ? "pointer" : "default")};
+  user-select: ${(props) => (props.clickable ? "none" : "auto")};
   justify-content: flex-start;
 `;
