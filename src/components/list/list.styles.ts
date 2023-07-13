@@ -49,7 +49,10 @@ export const GroupListWrap = styled.div<{ height: number }>`
   }
 `;
 
-export const GroupLabelWrap = styled(Between)<{ height: number }>`
+export const GroupLabelWrap = styled(Between)<{
+  height: number;
+  zIndex: number;
+}>`
   position: sticky;
   box-sizing: border-box;
   top: 0;
@@ -61,6 +64,7 @@ export const GroupLabelWrap = styled(Between)<{ height: number }>`
   background: #f2f2f2;
   color: #4a4a4a;
   user-select: none;
+  z-index: ${(props) => props.zIndex};
   span.spinner {
     display: block;
     svg {

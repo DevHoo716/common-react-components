@@ -138,6 +138,7 @@ export const GroupList = (props: GroupListProps) => {
             }
             folded={folded[startAt + index]}
             groupHeight={heights[startAt + index]}
+            isStart={index === 0}
           />
         ))}
       </div>
@@ -152,6 +153,7 @@ interface GroupProps {
   groupHeight: number;
   labelOnClick: () => void;
   itemOnClick?: (id: ItemInGroup["id"]) => void;
+  isStart?: boolean;
 }
 
 export const Group = (props: GroupProps) => {
@@ -162,6 +164,7 @@ export const Group = (props: GroupProps) => {
         height={props.group[0].height}
         onClick={props.labelOnClick}
         ac={!props.folded}
+        zIndex={props.isStart ? 100 : 1}
       >
         {props.group[0].label}
       </GroupLabel>
@@ -192,10 +195,15 @@ const GroupLabel = (props: {
   children: ReactNode;
   height: number;
   ac: boolean;
+  zIndex: number;
   onClick: () => void;
 }) => {
   return (
-    <GroupLabelWrap height={props.height} onClick={props.onClick}>
+    <GroupLabelWrap
+      height={props.height}
+      zIndex={props.zIndex}
+      onClick={props.onClick}
+    >
       {props.children}
       <span className={classNames("spinner", { ac: props.ac })}>
         <FontAwesomeIcon icon={faCaretLeft} />
